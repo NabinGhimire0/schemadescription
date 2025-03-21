@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstration</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #60a5fa;
+      --primary-dark: #1d4ed8;
+      --secondary: #475569;
+      --accent: #f59e0b;
+      --background: #f8fafc;
+      --text: #1e293b;
+      --light-gray: #f1f5f9;
+      --border: #cbd5e1;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      animation: fadeIn 1s ease-in-out 0.3s forwards;
+      opacity: 0;
+    }
+
+    nav {
+      background-color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-item {
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    main {
+      padding: 2rem 0;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h2 i {
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+    }
+
+    .schema-container {
+      overflow: auto;
+      max-height: 600px;
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: var(--light-gray);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+
+    th,
+    td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background-color: var(--primary-light);
+      color: white;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:nth-child(even) {
+      background-color: var(--light-gray);
+    }
+
+    .diagram-container {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .entity {
+      opacity: 0;
+      animation: fadeIn 0.5s ease-in-out forwards;
+    }
+
+    .relationship {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw 2s ease-in-out forwards;
+    }
+
+    .workflow-step {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 0.5s ease-in-out forwards;
+    }
+
+    .step-number {
+      background-color: var(--primary);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary-dark);
+    }
+
+    .code-block {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 1rem 0;
+    }
+
+    .sql-keyword {
+      color: #60a5fa;
+    }
+
+    .sql-string {
+      color: #fbbf24;
+    }
+
+    .sql-number {
+      color: #a78bfa;
+    }
+
+    .sql-comment {
+      color: #9ca3af;
+      font-style: italic;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .db-table {
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 0.5s ease-in-out forwards;
+    }
+
+    .db-table-header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .db-table-name {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .db-table-body {
+      background-color: white;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes draw {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .workflow-step {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .step-number {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    /* Add new styles for expanded tables */
+    .table-group {
+      margin-bottom: 2rem;
+    }
+
+    .table-group-title {
+      color: var(--primary-dark);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .workflow-details {
+      background-color: var(--light-gray);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+
+    .workflow-details h4 {
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .workflow-details ul {
+      list-style-type: none;
+      padding-left: 1.5rem;
+    }
+
+    .workflow-details li {
+      margin-bottom: 0.5rem;
+      position: relative;
+    }
+
+    .workflow-details li::before {
+      content: "•";
+      color: var(--primary);
+      position: absolute;
+      left: -1rem;
+    }
+  </style>
+</head>
+
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Portal Schema Presentation</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #60a5fa;
+      --primary-dark: #1d4ed8;
+      --secondary: #475569;
+      --accent: #f59e0b;
+      --background: #f8fafc;
+      --text: #1e293b;
+      --light-gray: #f1f5f9;
+      --border: #cbd5e1;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      animation: fadeIn 1s ease-in-out;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      animation: fadeIn 1s ease-in-out 0.3s forwards;
+      opacity: 0;
+    }
+    
+    nav {
+      background-color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .nav-item {
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+      .nav-item:hover,
+      .nav-item.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    main {
+      padding: 2rem 0;
+    }
+    
+    .section {
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    .section.active {
+      display: block;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    h2 i {
+      font-size: 1.5rem;
+    }
+    
+    p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .schema-container {
+      overflow: auto;
+      max-height: 600px;
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: var(--light-gray);
+      border-radius: 8px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    
+      th,
+      td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    th {
+      background-color: var(--primary-light);
+      color: white;
+      position: sticky;
+      top: 0;
+    }
+    
+    tr:nth-child(even) {
+      background-color: var(--light-gray);
+    }
+    
+    .diagram-container {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+    
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    .entity {
+      opacity: 0;
+      animation: fadeIn 0.5s ease-in-out forwards;
+    }
+    
+    .relationship {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw 2s ease-in-out forwards;
+    }
+    
+    .workflow-step {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 0.5s ease-in-out forwards;
+    }
+    
+    .step-number {
+      background-color: var(--primary);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
+    .step-content {
+      flex: 1;
+    }
+    
+    .step-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary-dark);
+    }
+
+    .code-block {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 1rem 0;
+    }
+    
+    .sql-keyword {
+      color: #60a5fa;
+    }
+    
+    .sql-string {
+      color: #fbbf24;
+    }
+    
+    .sql-number {
+      color: #a78bfa;
+    }
+    
+    .sql-comment {
+      color: #9ca3af;
+      font-style: italic;
+    }
+    
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .db-table {
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 0.5s ease-in-out forwards;
+    }
+    
+    .db-table-header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .db-table-name {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    
+    .db-table-body {
+      background-color: white;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+    }
+    
+    @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+    }
+    
+    @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+    }
+    
+    @keyframes slideUp {
+      to { 
+        opacity: 1; 
+        transform: translateY(0);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .workflow-step {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .step-number {
+        margin-bottom: 0.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <h1>Job Portal Database Schema</h1>
+      <p class="subtitle">A comprehensive overview of our platform's data architecture</p>
+    </div>
+  </header>
+  
+  <nav>
+    <div class="container">
+      <div class="nav-container">
+        <div class="nav-item active" data-section="overview">Overview</div>
+        <div class="nav-item" data-section="schema">Schema Details</div>
+        <div class="nav-item" data-section="diagram">ER Diagram</div>
+        <div class="nav-item" data-section="workflow">Workflow Example</div>
+      </div>
+    </div>
+  </nav>
+  
+  <main>
+    <div class="container">
+      <!-- Overview Section -->
+      <section id="overview" class="section active">
+        <div class="card">
+          <h2>Project Overview</h2>
+            <p>Our job portal platform brings together job seekers and employers in a comprehensive ecosystem. The
+              database schema is designed to support all aspects of the job search and hiring process, with robust tracking and analytics capabilities.</p>
+            <p>The system consists of 19 interconnected tables, carefully structured to ensure data integrity,
+              performance, and scalability as our platform grows.</p>
+          
+          <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem;">
+              <div
+                style="flex: 1; min-width: 200px; background-color: var(--primary); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold;">19</div>
+              <div>Database Tables</div>
+            </div>
+              <div
+                style="flex: 1; min-width: 200px; background-color: var(--secondary); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold;">250+</div>
+              <div>Data Fields</div>
+            </div>
+              <div
+                style="flex: 1; min-width: 200px; background-color: var(--accent); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold;">40+</div>
+              <div>Relationships</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h2>Key Features</h2>
+          
+          <div style="margin-top: 1.5rem;">
+              <div
+                style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; animation: slideUp 0.5s ease-in-out 0.2s forwards; opacity: 0;">
+                <div
+                  style="background-color: var(--primary-light); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
+                  1</div>
+              <div>
+                <h3 style="margin-bottom: 0.5rem; color: var(--primary-dark);">Comprehensive User Management</h3>
+                  <p>Advanced user system supporting multiple roles with detailed profiles, activity tracking, and enhanced security features.</p>
+              </div>
+            </div>
+            
+              <div
+                style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; animation: slideUp 0.5s ease-in-out 0.4s forwards; opacity: 0;">
+                <div
+                  style="background-color: var(--primary-light); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
+                  2</div>
+              <div>
+                <h3 style="margin-bottom: 0.5rem; color: var(--primary-dark);">Advanced Job Listing System</h3>
+                  <p>Structured job data with hierarchical categories, comprehensive skill tracking, and detailed analytics for better matching and insights.</p>
+              </div>
+            </div>
+            
+              <div
+                style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; animation: slideUp 0.5s ease-in-out 0.6s forwards; opacity: 0;">
+                <div
+                  style="background-color: var(--primary-light); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
+                  3</div>
+              <div>
+                <h3 style="margin-bottom: 0.5rem; color: var(--primary-dark);">Complete Application Tracking</h3>
+                  <p>Full lifecycle management of job applications with detailed status tracking, interview scheduling, and feedback management.</p>
+              </div>
+            </div>
+            
+              <div
+                style="display: flex; align-items: flex-start; gap: 1rem; animation: slideUp 0.5s ease-in-out 0.8s forwards; opacity: 0;">
+                <div
+                  style="background-color: var(--primary-light); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
+                  4</div>
+              <div>
+                <h3 style="margin-bottom: 0.5rem; color: var(--primary-dark);">Enhanced Engagement Features</h3>
+                  <p>Comprehensive platform interaction tracking including company followers, job views, search history, and personalized notifications.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Schema Details Section -->
+      <section id="schema" class="section">
+        <div class="card">
+          <h2>Database Schema Overview</h2>
+          <p>Our job portal database consists of 15 interconnected tables that handle all aspects of the platform.</p>
+          
+          <div class="table-group">
+            <div class="table-group-title">Core User Management</div>
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">Users</div>
+                <div>Central user management</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>f_name</td><td>String</td><td>First name</td></tr>
+                    <tr><td>m_name</td><td>String</td><td>Middle name</td></tr>
+                    <tr><td>l_name</td><td>String</td><td>Last name</td></tr>
+                    <tr><td>email</td><td>String</td><td>Email address (unique)</td></tr>
+                    <tr><td>phone</td><td>String</td><td>Contact phone number</td></tr>
+                    <tr><td>province</td><td>String</td><td>Geographic location - province</td></tr>
+                    <tr><td>district</td><td>String</td><td>Geographic location - district</td></tr>
+                    <tr><td>city</td><td>String</td><td>City of residence</td></tr>
+                    <tr><td>gender</td><td>String</td><td>User's gender</td></tr>
+                    <tr><td>role</td><td>Enum</td><td>[superadmin, admin, company, jobseeker]</td></tr>
+                    <tr><td>profile_image</td><td>String</td><td>Path to profile image file</td></tr>
+                    <tr><td>bio</td><td>Text</td><td>Short biography</td></tr>
+                    <tr><td>social_links</td><td>JSON</td><td>Social media profile links</td></tr>
+                    <tr><td>password</td><td>String</td><td>Hashed password</td></tr>
+                    <tr><td>is_active</td><td>Boolean</td><td>Account status</td></tr>
+                    <tr><td>email_verified_at</td><td>Timestamp</td><td>Email verification timestamp</td></tr>
+                    <tr><td>last_login_at</td><td>Timestamp</td><td>Last login timestamp</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Record creation timestamp</td></tr>
+                    <tr><td>updated_at</td><td>Timestamp</td><td>Record update timestamp</td></tr>
+                    <tr><td>deleted_at</td><td>Timestamp</td><td>Soft delete timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">Companies</div>
+                <div>Organization profiles</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>user_id</td><td>Integer</td><td>Foreign key to Users table</td></tr>
+                    <tr><td>company_name</td><td>String</td><td>Name of the company</td></tr>
+                    <tr><td>slug</td><td>String</td><td>URL-friendly version of company name</td></tr>
+                    <tr><td>description</td><td>Text</td><td>Detailed company description</td></tr>
+                    <tr><td>website</td><td>String</td><td>Company website URL</td></tr>
+                    <tr><td>logo</td><td>String</td><td>Path to company logo image</td></tr>
+                    <tr><td>industry</td><td>String</td><td>Industry category</td></tr>
+                    <tr><td>province</td><td>String</td><td>Company location - province</td></tr>
+                    <tr><td>district</td><td>String</td><td>Company location - district</td></tr>
+                    <tr><td>city</td><td>String</td><td>Company location - city</td></tr>
+                    <tr><td>ward</td><td>String</td><td>Company location - ward</td></tr>
+                    <tr><td>employee_count</td><td>String</td><td>Company size range</td></tr>
+                    <tr><td>founded_year</td><td>Integer</td><td>Year company was founded</td></tr>
+                    <tr><td>contact_email</td><td>String</td><td>Company contact email</td></tr>
+                    <tr><td>contact_phone</td><td>String</td><td>Company contact phone</td></tr>
+                    <tr><td>social_media</td><td>JSON</td><td>Social media profiles</td></tr>
+                    <tr><td>documents</td><td>JSON</td><td>Company documents</td></tr>
+                    <tr><td>is_verified</td><td>Boolean</td><td>Verification status</td></tr>
+                    <tr><td>is_featured</td><td>Boolean</td><td>Featured status</td></tr>
+                    <tr><td>is_toprated</td><td>Boolean</td><td>Top rated status</td></tr>
+                    <tr><td>status</td><td>String</td><td>Company status</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Record creation timestamp</td></tr>
+                    <tr><td>updated_at</td><td>Timestamp</td><td>Record update timestamp</td></tr>
+                    <tr><td>deleted_at</td><td>Timestamp</td><td>Soft delete timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-group">
+            <div class="table-group-title">Job Management</div>
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">JobCategories</div>
+                <div>Classification of jobs</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>parent_id</td><td>Integer</td><td>Parent category ID for hierarchy</td></tr>
+                    <tr><td>slug</td><td>String</td><td>URL-friendly version of title</td></tr>
+                    <tr><td>title</td><td>String</td><td>Category name</td></tr>
+                    <tr><td>description</td><td>Text</td><td>Category description</td></tr>
+                    <tr><td>icon</td><td>String</td><td>Category icon</td></tr>
+                    <tr><td>status</td><td>Boolean</td><td>Category status</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Record creation timestamp</td></tr>
+                    <tr><td>updated_at</td><td>Timestamp</td><td>Record update timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">Jobs</div>
+                <div>Job listings</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>company_id</td><td>Integer</td><td>Foreign key to Companies table</td></tr>
+                    <tr><td>category_id</td><td>Integer</td><td>Foreign key to JobCategories table</td></tr>
+                    <tr><td>title</td><td>String</td><td>Job title</td></tr>
+                    <tr><td>slug</td><td>String</td><td>URL-friendly version of title</td></tr>
+                    <tr><td>description</td><td>Text</td><td>Job description</td></tr>
+                    <tr><td>province</td><td>String</td><td>Job location - province</td></tr>
+                    <tr><td>district</td><td>String</td><td>Job location - district</td></tr>
+                    <tr><td>city</td><td>String</td><td>Job location - city</td></tr>
+                    <tr><td>ward</td><td>String</td><td>Job location - ward</td></tr>
+                    <tr><td>job_type</td><td>Enum</td><td>[full_time, part_time, intern, remote]</td></tr>
+                    <tr><td>experience_level</td><td>Enum</td><td>[entry, mid, senior]</td></tr>
+                    <tr><td>salary_min</td><td>Decimal</td><td>Minimum salary</td></tr>
+                    <tr><td>salary_max</td><td>Decimal</td><td>Maximum salary</td></tr>
+                    <tr><td>application_deadline</td><td>Date</td><td>Application deadline</td></tr>
+                    <tr><td>experience</td><td>Integer</td><td>Required experience in years</td></tr>
+                    <tr><td>remote_allowed</td><td>Boolean</td><td>Remote work allowed</td></tr>
+                    <tr><td>is_remote</td><td>Boolean</td><td>Remote work availability</td></tr>
+                    <tr><td>is_featured</td><td>Boolean</td><td>Featured job status</td></tr>
+                    <tr><td>is_urgent</td><td>Boolean</td><td>Urgent hiring status</td></tr>
+                    <tr><td>status</td><td>Enum</td><td>Job status (draft, published, closed, expired)</td></tr>
+                    <tr><td>views_count</td><td>Integer</td><td>Number of job views</td></tr>
+                    <tr><td>applications_count</td><td>Integer</td><td>Number of applications received</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Record creation timestamp</td></tr>
+                    <tr><td>updated_at</td><td>Timestamp</td><td>Record update timestamp</td></tr>
+                    <tr><td>deleted_at</td><td>Timestamp</td><td>Soft delete timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-group">
+            <div class="table-group-title">JobSeekers</div>
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">JobSeekers</div>
+                <div>Extended user profiles for job seekers</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>user_id</td><td>Integer</td><td>Foreign key to Users table</td></tr>
+                    <tr><td>education</td><td>JSON</td><td>Educational background</td></tr>
+                    <tr><td>work_experience</td><td>JSON</td><td>Work history</td></tr>
+                    <tr><td>certification</td><td>JSON</td><td>Professional certifications</td></tr>
+                    <tr><td>projects</td><td>JSON</td><td>Portfolio projects</td></tr>
+                    <tr><td>summary</td><td>Text</td><td>Professional summary</td></tr>
+                    <tr><td>open_to_work</td><td>Boolean</td><td>Job seeking status</td></tr>
+                    <tr><td>desired_job_title</td><td>String</td><td>Preferred job title</td></tr>
+                    <tr><td>expected_salary</td><td>Integer</td><td>Expected salary</td></tr>
+                    <tr><td>preferred_location</td><td>String</td><td>Preferred work location</td></tr>
+                    <tr><td>willing_to_relocate</td><td>Boolean</td><td>Relocation preference</td></tr>
+                    <tr><td>availability</td><td>String</td><td>Work availability</td></tr>
+                    <tr><td>resume</td><td>String</td><td>Path to resume file</td></tr>
+                    <tr><td>skills_description</td><td>Text</td><td>Overview of skills and expertise</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Record creation timestamp</td></tr>
+                    <tr><td>updated_at</td><td>Timestamp</td><td>Record update timestamp</td></tr>
+                    <tr><td>deleted_at</td><td>Timestamp</td><td>Soft delete timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">JobApplications</div>
+                <div>Application tracking</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>job_id</td><td>Integer</td><td>Foreign key to Jobs table</td></tr>
+                    <tr><td>user_id</td><td>Integer</td><td>Foreign key to Users table</td></tr>
+                    <tr><td>applied_date</td><td>Date</td><td>Application submission date</td></tr>
+                    <tr><td>status</td><td>Enum</td><td>[pending, shortlisted, reviewing, interviewed, offered, hired, rejected]</td></tr>
+                    <tr><td>cover_letter</td><td>Text</td><td>Application cover letter</td></tr>
+                    <tr><td>resume</td><td>String</td><td>Path to resume file</td></tr>
+                    <tr><td>message</td><td>Text</td><td>Additional message</td></tr>
+                    <tr><td>offered_salary</td><td>Integer</td><td>Offered salary amount</td></tr>
+                    <tr><td>offer_accepted</td><td>Boolean</td><td>Offer acceptance status</td></tr>
+                    <tr><td>interview_date</td><td>Timestamp</td><td>Scheduled interview date</td></tr>
+                    <tr><td>feedback</td><td>Text</td><td>Application feedback</td></tr>
+                    <tr><td>status_updated_at</td><td>Timestamp</td><td>Last status update timestamp</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Record creation timestamp</td></tr>
+                    <tr><td>updated_at</td><td>Timestamp</td><td>Record update timestamp</td></tr>
+                    <tr><td>deleted_at</td><td>Timestamp</td><td>Soft delete timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">SavedJobs</div>
+                <div>Bookmarked jobs by users</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>user_id</td><td>Integer</td><td>Foreign key to Users table</td></tr>
+                    <tr><td>job_id</td><td>Integer</td><td>Foreign key to Jobs table</td></tr>
+                    <tr><td>notes</td><td>Text</td><td>User notes about the saved job</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Record creation timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-group">
+            <div class="table-group-title">Platform Notices</div>
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">PlatformNotice</div>
+                <div>System-wide announcements</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>slug</td><td>String</td><td>URL-friendly version of title</td></tr>
+                    <tr><td>type</td><td>String</td><td>Notice type</td></tr>
+                    <tr><td>content</td><td>Text</td><td>Notice content</td></tr>
+                    <tr><td>status</td><td>String</td><td>Notice status</td></tr>
+                    <tr><td>start_date</td><td>Timestamp</td><td>Notice display start date</td></tr>
+                    <tr><td>end_date</td><td>Timestamp</td><td>Notice display end date</td></tr>
+                    <tr><td>priority</td><td>Integer</td><td>Notice display priority</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Record creation timestamp</td></tr>
+                    <tr><td>updated_at</td><td>Timestamp</td><td>Record update timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-group">
+            <div class="table-group-title">Skills Management</div>
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">Skills</div>
+                <div>Skill definitions and categories</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>name</td><td>String</td><td>Skill name</td></tr>
+                    <tr><td>category</td><td>String</td><td>Skill category</td></tr>
+                    <tr><td>description</td><td>Text</td><td>Detailed skill description</td></tr>
+                    <tr><td>parent_id</td><td>Integer</td><td>Parent skill for hierarchy</td></tr>
+                    <tr><td>popularity</td><td>Integer</td><td>Skill demand/usage count</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Record creation timestamp</td></tr>
+                    <tr><td>updated_at</td><td>Timestamp</td><td>Record update timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">JobSkills</div>
+                <div>Required skills for jobs</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>job_id</td><td>Integer</td><td>Foreign key to Jobs table</td></tr>
+                    <tr><td>skill_id</td><td>Integer</td><td>Foreign key to Skills table</td></tr>
+                    <tr><td>experience_level</td><td>String</td><td>Required experience level</td></tr>
+                    <tr><td>is_required</td><td>Boolean</td><td>Mandatory skill flag</td></tr>
+                    <tr><td>priority</td><td>Integer</td><td>Skill importance level</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Record creation timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">UserSkills</div>
+                <div>User skill proficiencies</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>user_id</td><td>Integer</td><td>Foreign key to Users table</td></tr>
+                    <tr><td>skill_id</td><td>Integer</td><td>Foreign key to Skills table</td></tr>
+                    <tr><td>years_experience</td><td>Integer</td><td>Years of experience</td></tr>
+                    <tr><td>proficiency_level</td><td>String</td><td>Skill proficiency level</td></tr>
+                    <tr><td>is_highlighted</td><td>Boolean</td><td>Featured skill flag</td></tr>
+                    <tr><td>last_used_date</td><td>Date</td><td>Last time skill was used</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Record creation timestamp</td></tr>
+                    <tr><td>updated_at</td><td>Timestamp</td><td>Record update timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-group">
+            <div class="table-group-title">User Engagement & Analytics</div>
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">JobViews</div>
+                <div>Track job listing views</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>job_id</td><td>Integer</td><td>Foreign key to Jobs table</td></tr>
+                    <tr><td>user_id</td><td>Integer</td><td>Foreign key to Users table</td></tr>
+                    <tr><td>ip_address</td><td>String</td><td>Viewer IP address</td></tr>
+                    <tr><td>user_agent</td><td>String</td><td>Browser/device info</td></tr>
+                    <tr><td>view_duration</td><td>Integer</td><td>Time spent viewing (seconds)</td></tr>
+                    <tr><td>source</td><td>String</td><td>Traffic source</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>View timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">CompanyFollowers</div>
+                <div>Users following companies</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>user_id</td><td>Integer</td><td>Foreign key to Users table</td></tr>
+                    <tr><td>company_id</td><td>Integer</td><td>Foreign key to Companies table</td></tr>
+                    <tr><td>notification_preferences</td><td>JSON</td><td>Notification settings</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Follow start date</td></tr>
+                    <tr><td>updated_at</td><td>Timestamp</td><td>Last update timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">JobSearchHistory</div>
+                <div>User search patterns</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>user_id</td><td>Integer</td><td>Foreign key to Users table</td></tr>
+                    <tr><td>search_query</td><td>String</td><td>Search keywords</td></tr>
+                    <tr><td>filters</td><td>JSON</td><td>Applied search filters</td></tr>
+                    <tr><td>results_count</td><td>Integer</td><td>Number of results</td></tr>
+                    <tr><td>location</td><td>String</td><td>Search location</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Search timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">Notifications</div>
+                <div>User notifications</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>user_id</td><td>Integer</td><td>Foreign key to Users table</td></tr>
+                    <tr><td>type</td><td>String</td><td>Notification type</td></tr>
+                    <tr><td>title</td><td>String</td><td>Notification title</td></tr>
+                    <tr><td>content</td><td>Text</td><td>Notification content</td></tr>
+                    <tr><td>data</td><td>JSON</td><td>Additional data</td></tr>
+                    <tr><td>read_at</td><td>Timestamp</td><td>Read timestamp</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Creation timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="db-table">
+              <div class="db-table-header">
+                <div class="db-table-name">ActivityLog</div>
+                <div>User activity tracking</div>
+              </div>
+              <div class="db-table-body">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td>id</td><td>Integer</td><td>Primary key</td></tr>
+                    <tr><td>user_id</td><td>Integer</td><td>Foreign key to Users table</td></tr>
+                    <tr><td>activity_type</td><td>String</td><td>Type of activity</td></tr>
+                    <tr><td>entity_type</td><td>String</td><td>Related entity type</td></tr>
+                    <tr><td>entity_id</td><td>Integer</td><td>Related entity ID</td></tr>
+                    <tr><td>description</td><td>Text</td><td>Activity description</td></tr>
+                    <tr><td>metadata</td><td>JSON</td><td>Additional activity data</td></tr>
+                    <tr><td>ip_address</td><td>String</td><td>User IP address</td></tr>
+                    <tr><td>user_agent</td><td>String</td><td>Browser/device info</td></tr>
+                    <tr><td>created_at</td><td>Timestamp</td><td>Activity timestamp</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- ER Diagram Section -->
+      <section id="diagram" class="section">
+        <div class="card">
+          <h2>Entity Relationship Diagram</h2>
+          <p>This comprehensive diagram shows the relationships between all 15 tables in our job portal database.</p>
+          
+          <div class="diagram-container" id="erDiagram">
+            <svg width="1400" height="1200" viewBox="0 0 1600 1400">
+              <!-- Add SVG definitions -->
+              <defs>
+                <style>
+                  .entity { fill: #e1f5fe; stroke: #0288d1; stroke-width: 2; }
+                  .entity-title { font-family: sans-serif; font-size: 14px; font-weight: bold; text-anchor: middle; }
+                  .relationship { stroke: #424242; stroke-width: 2; fill: none; }
+                  .cardinality { font-family: sans-serif; font-size: 12px; text-anchor: middle; }
+                  .attribute { font-family: sans-serif; font-size: 11px; text-anchor: start; }
+                  .pk { font-weight: bold; }
+                </style>
+              </defs>
+
+              <!-- Users Entity -->
+              <rect x="50" y="50" width="200" height="160" rx="5" class="entity" />
+              <text x="150" y="75" class="entity-title">Users</text>
+              <text x="60" y="95" class="attribute pk">id</text>
+              <text x="60" y="110" class="attribute">f_name, m_name, l_name</text>
+              <text x="60" y="125" class="attribute">email, phone, role</text>
+              
+              <!-- Companies Entity -->
+              <rect x="400" y="50" width="200" height="160" rx="5" class="entity" />
+              <text x="500" y="75" class="entity-title">Companies</text>
+              <text x="410" y="95" class="attribute pk">id</text>
+              <text x="410" y="110" class="attribute">user_id (FK)</text>
+              <text x="410" y="125" class="attribute">company_name, description</text>
+              
+              <!-- Jobs Entity -->
+              <rect x="750" y="50" width="200" height="160" rx="5" class="entity" />
+              <text x="850" y="75" class="entity-title">Jobs</text>
+              <text x="760" y="95" class="attribute pk">id</text>
+              <text x="760" y="110" class="attribute">company_id (FK)</text>
+              <text x="760" y="125" class="attribute">category_id (FK)</text>
+
+              <!-- JobSeekers Entity -->
+              <rect x="50" y="300" width="200" height="160" rx="5" class="entity" />
+              <text x="150" y="325" class="entity-title">JobSeekers</text>
+              <text x="60" y="345" class="attribute pk">id</text>
+              <text x="60" y="360" class="attribute">user_id (FK)</text>
+              <text x="60" y="375" class="attribute">education, work_experience</text>
+
+              <!-- JobCategories Entity -->
+              <rect x="400" y="300" width="200" height="160" rx="5" class="entity" />
+              <text x="500" y="325" class="entity-title">JobCategories</text>
+              <text x="410" y="345" class="attribute pk">id</text>
+              <text x="410" y="360" class="attribute">title, slug</text>
+
+              <!-- JobApplications Entity -->
+              <rect x="750" y="300" width="200" height="160" rx="5" class="entity" />
+              <text x="850" y="325" class="entity-title">JobApplications</text>
+              <text x="760" y="345" class="attribute pk">id</text>
+              <text x="760" y="360" class="attribute">job_id (FK), user_id (FK)</text>
+
+              <!-- SavedJobs Entity -->
+              <rect x="50" y="550" width="200" height="160" rx="5" class="entity" />
+              <text x="150" y="575" class="entity-title">SavedJobs</text>
+              <text x="60" y="595" class="attribute pk">id</text>
+              <text x="60" y="610" class="attribute">user_id (FK), job_id (FK)</text>
+
+              <!-- PlatformNotice Entity -->
+              <rect x="400" y="550" width="200" height="160" rx="5" class="entity" />
+              <text x="500" y="575" class="entity-title">PlatformNotice</text>
+              <text x="410" y="595" class="attribute pk">id</text>
+              <text x="410" y="610" class="attribute">type, content, status</text>
+
+              <!-- Skills Entity -->
+              <rect x="750" y="550" width="200" height="160" rx="5" class="entity" />
+              <text x="850" y="575" class="entity-title">Skills</text>
+              <text x="760" y="595" class="attribute pk">id</text>
+              <text x="760" y="610" class="attribute">name, category</text>
+
+              <!-- JobSkills Entity -->
+              <rect x="750" y="800" width="200" height="160" rx="5" class="entity" />
+              <text x="850" y="825" class="entity-title">JobSkills</text>
+              <text x="760" y="845" class="attribute">job_id (FK), skill_id (FK)</text>
+              <text x="760" y="860" class="attribute">experience_level, is_required</text>
+
+              <!-- UserSkills Entity -->
+              <rect x="400" y="800" width="200" height="160" rx="5" class="entity" />
+              <text x="500" y="825" class="entity-title">UserSkills</text>
+              <text x="410" y="845" class="attribute">user_id (FK), skill_id (FK)</text>
+              <text x="410" y="860" class="attribute">years_experience, proficiency</text>
+
+              <!-- Relationships -->
+              <!-- Users to Companies -->
+              <path d="M250 130 L400 130" class="relationship" />
+              <text x="325" y="120" class="cardinality">1:1</text>
+
+              <!-- Companies to Jobs -->
+              <path d="M600 130 L750 130" class="relationship" />
+              <text x="675" y="120" class="cardinality">1:N</text>
+
+              <!-- Users to JobSeekers -->
+              <path d="M150 210 L150 300" class="relationship" />
+              <text x="140" y="255" class="cardinality">1:1</text>
+
+              <!-- Jobs to JobCategories -->
+              <path d="M850 210 L500 300" class="relationship" />
+              <text x="675" y="255" class="cardinality">N:1</text>
+
+              <!-- Jobs to JobApplications -->
+              <path d="M850 210 L850 300" class="relationship" />
+              <text x="865" y="255" class="cardinality">1:N</text>
+
+              <!-- Users to JobApplications -->
+              <path d="M250 130 C350 130 650 250 750 300" class="relationship" />
+              <text x="500" y="200" class="cardinality">1:N</text>
+
+              <!-- Users to SavedJobs -->
+              <path d="M150 210 L150 550" class="relationship" />
+              <text x="140" y="380" class="cardinality">1:N</text>
+
+              <!-- Jobs to SavedJobs -->
+              <path d="M750 130 C600 130 300 400 150 550" class="relationship" />
+              <text x="400" y="300" class="cardinality">1:N</text>
+
+              <!-- Skills to JobSkills -->
+              <path d="M850 710 L850 800" class="relationship" />
+              <text x="865" y="755" class="cardinality">1:N</text>
+
+              <!-- Skills to UserSkills -->
+              <path d="M750 630 C600 630 500 700 500 800" class="relationship" />
+              <text x="600" y="700" class="cardinality">1:N</text>
+
+              <!-- Jobs to JobSkills -->
+              <path d="M850 210 C900 210 900 700 850 800" class="relationship" />
+              <text x="910" y="500" class="cardinality">1:N</text>
+
+              <!-- Users to UserSkills -->
+              <path d="M250 130 C300 130 300 700 400 800" class="relationship" />
+              <text x="300" y="500" class="cardinality">1:N</text>
+
+              <!-- User Engagement & Analytics Tables -->
+              <g transform="translate(800, 600)">
+                <rect width="160" height="180" fill="#f8f9fa" stroke="#dee2e6"/>
+                <text x="10" y="30" class="entity-name">JobViews</text>
+                <text x="10" y="50" class="entity-attr">id (pk)</text>
+                <text x="10" y="70" class="entity-attr">job_id (FK)</text>
+                <text x="10" y="90" class="entity-attr">user_id (FK)</text>
+                <text x="10" y="110" class="entity-attr">ip_address</text>
+                <text x="10" y="130" class="entity-attr">view_duration</text>
+                <text x="10" y="150" class="entity-attr">source</text>
+              </g>
+
+              <g transform="translate(1000, 600)">
+                <rect width="160" height="160" fill="#f8f9fa" stroke="#dee2e6"/>
+                <text x="10" y="30" class="entity-name">CompanyFollowers</text>
+                <text x="10" y="50" class="entity-attr">id (pk)</text>
+                <text x="10" y="70" class="entity-attr">user_id (FK)</text>
+                <text x="10" y="90" class="entity-attr">company_id (FK)</text>
+                <text x="10" y="110" class="entity-attr">notification_preferences</text>
+              </g>
+
+              <g transform="translate(800, 800)">
+                <rect width="160" height="160" fill="#f8f9fa" stroke="#dee2e6"/>
+                <text x="10" y="30" class="entity-name">JobSearchHistory</text>
+                <text x="10" y="50" class="entity-attr">id (pk)</text>
+                <text x="10" y="70" class="entity-attr">user_id (FK)</text>
+                <text x="10" y="90" class="entity-attr">search_query</text>
+                <text x="10" y="110" class="entity-attr">filters</text>
+                <text x="10" y="130" class="entity-attr">location</text>
+              </g>
+
+              <g transform="translate(1000, 800)">
+                <rect width="160" height="180" fill="#f8f9fa" stroke="#dee2e6"/>
+                <text x="10" y="30" class="entity-name">Notifications</text>
+                <text x="10" y="50" class="entity-attr">id (pk)</text>
+                <text x="10" y="70" class="entity-attr">user_id (FK)</text>
+                <text x="10" y="90" class="entity-attr">type</text>
+                <text x="10" y="110" class="entity-attr">title</text>
+                <text x="10" y="130" class="entity-attr">content</text>
+                <text x="10" y="150" class="entity-attr">read_at</text>
+              </g>
+
+              <g transform="translate(900, 1000)">
+                <rect width="160" height="200" fill="#f8f9fa" stroke="#dee2e6"/>
+                <text x="10" y="30" class="entity-name">ActivityLog</text>
+                <text x="10" y="50" class="entity-attr">id (pk)</text>
+                <text x="10" y="70" class="entity-attr">user_id (FK)</text>
+                <text x="10" y="90" class="entity-attr">activity_type</text>
+                <text x="10" y="110" class="entity-attr">entity_type</text>
+                <text x="10" y="130" class="entity-attr">entity_id</text>
+                <text x="10" y="150" class="entity-attr">description</text>
+                <text x="10" y="170" class="entity-attr">metadata</text>
+              </g>
+
+              <!-- Relationships for new tables -->
+              <!-- JobViews relationships -->
+              <path d="M 880 600 L 880 200" class="relationship" marker-end="url(#arrow)"/>
+              <text x="890" y="400" class="cardinality">1:N</text>
+              <path d="M 800 680 L 400 200" class="relationship" marker-end="url(#arrow)"/>
+              <text x="600" y="400" class="cardinality">1:N</text>
+
+              <!-- CompanyFollowers relationships -->
+              <path d="M 1080 600 L 600 200" class="relationship" marker-end="url(#arrow)"/>
+              <text x="800" y="400" class="cardinality">1:N</text>
+              <path d="M 1000 680 L 400 200" class="relationship" marker-end="url(#arrow)"/>
+              <text x="700" y="400" class="cardinality">1:N</text>
+
+              <!-- JobSearchHistory relationships -->
+              <path d="M 800 880 L 400 200" class="relationship" marker-end="url(#arrow)"/>
+              <text x="600" y="500" class="cardinality">1:N</text>
+
+              <!-- Notifications relationships -->
+              <path d="M 1000 880 L 400 200" class="relationship" marker-end="url(#arrow)"/>
+              <text x="700" y="500" class="cardinality">1:N</text>
+
+              <!-- ActivityLog relationships -->
+              <path d="M 900 1080 L 400 200" class="relationship" marker-end="url(#arrow)"/>
+              <text x="650" y="600" class="cardinality">1:N</text>
+
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workflow Section -->
+      <section id="workflow" class="section">
+        <div class="card">
+          <h2>Platform Workflow Overview</h2>
+          <p>Our job portal facilitates the entire job search and hiring process through several interconnected
+            workflows:</p>
+
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">User Registration & Profile Creation</div>
+              <div class="workflow-details">
+                <h4>Job Seeker Flow:</h4>
+                <ul>
+                  <li>Create account with basic information</li>
+                  <li>Complete detailed profile with education and experience</li>
+                  <li>Add skills and certifications</li>
+                  <li>Upload resume and portfolio</li>
+                  <li>Set job preferences and alerts</li>
+                </ul>
+
+                <h4>Company Flow:</h4>
+                <ul>
+                  <li>Register company account</li>
+                  <li>Submit verification documents</li>
+                  <li>Complete company profile</li>
+                  <li>Add company details and branding</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Job Posting & Discovery</div>
+              <div class="workflow-details">
+                <h4>For Companies:</h4>
+                <ul>
+                  <li>Create detailed job listings</li>
+                  <li>Specify requirements and benefits</li>
+                  <li>Set application deadlines</li>
+                  <li>Choose visibility options</li>
+                </ul>
+
+                <h4>For Job Seekers:</h4>
+                <ul>
+                  <li>Browse job listings</li>
+                  <li>Save interesting positions</li>
+                  <li>Set up job alerts</li>
+                  <li>Filter by location, salary, and type</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Application Process</div>
+              <div class="workflow-details">
+                <h4>Application Submission:</h4>
+                <ul>
+                  <li>Submit application with resume</li>
+                  <li>Write cover letter</li>
+                  <li>Highlight relevant skills</li>
+                  <li>Track application status</li>
+                </ul>
+
+                <h4>Company Review:</h4>
+                <ul>
+                  <li>Screen applications</li>
+                  <li>Update application status</li>
+                  <li>Schedule interviews</li>
+                  <li>Make hiring decisions</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Engagement & Feedback</div>
+              <div class="workflow-details">
+                <h4>Platform Interaction:</h4>
+                <ul>
+                  <li>Company reviews and ratings</li>
+                  <li>Application tracking</li>
+                  <li>Notification system</li>
+                  <li>Premium features access</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Navigation functionality
+    document.addEventListener('DOMContentLoaded', function () {
+      const navItems = document.querySelectorAll('.nav-item');
+      const sections = document.querySelectorAll('.section');
+
+      navItems.forEach(item => {
+        item.addEventListener('click', function () {
+          const targetSection = this.getAttribute('data-section');
+
+          // Update navigation items
+          navItems.forEach(navItem => navItem.classList.remove('active'));
+          this.classList.add('active');
+
+          // Update sections
+          sections.forEach(section => {
+            if (section.id === targetSection) {
+              section.classList.add('active');
+            } else {
+              section.classList.remove('active');
+            }
+          });
+        });
+      });
+
+      // Show more tables functionality
+      const showMoreBtn = document.getElementById('showMoreTables');
+      const additionalTables = document.getElementById('additionalTables');
+
+      if (showMoreBtn && additionalTables) {
+        showMoreBtn.addEventListener('click', function () {
+          additionalTables.style.display = 'block';
+          this.style.display = 'none';
+        });
+      }
+
+      // Animate entities and relationships in ER diagram
+      const entities = document.querySelectorAll('.entity');
+      const relationships = document.querySelectorAll('.relationship');
+      const cardinalityTexts = document.querySelectorAll('.cardinality');
+      const attributes = document.querySelectorAll('.attribute');
+      const entityTitles = document.querySelectorAll('.entity-title');
+
+      function animateElements() {
+        entities.forEach(entity => entity.style.opacity = '1');
+        relationships.forEach(rel => rel.style.animation = 'draw 2s ease-in-out forwards');
+        cardinalityTexts.forEach(text => text.style.opacity = '1');
+        attributes.forEach(attr => attr.style.opacity = '1');
+        entityTitles.forEach(title => title.style.opacity = '1');
+      }
+
+      // Trigger animations when diagram section becomes visible
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateElements();
+          }
+        });
+      });
+
+      const diagram = document.getElementById('erDiagram');
+      if (diagram) {
+        observer.observe(diagram);
+      }
+    });
+  </script>
+</body>
+
+</html>
